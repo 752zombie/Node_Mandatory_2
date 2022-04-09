@@ -1,13 +1,24 @@
 <script>
-	export let name;
+	import { Router, Link, Route } from "svelte-navigator";
+	import Test from "./routes/Test.svelte";
 </script>
 
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+<Router>
+	<span class="link-wrapper">
+		<Link to="test" class="link">Go to /test</Link>
+	</span>
+	
+	<Route path="test" component={Test} />
+</Router>
+
+<h1>Hello</h1>
 
 <style>
+	
+	.link-wrapper :global(.link) {
+        color: red;
+    }
+
 	main {
 		text-align: center;
 		padding: 1em;
