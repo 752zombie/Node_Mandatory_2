@@ -2,6 +2,7 @@
 	import { Router, Link, Route } from "svelte-navigator";
 	import Test from "./routes/Test.svelte";
 	import Home from "./routes/Home.svelte";
+	import Signup from "./routes/Signup.svelte";
 </script>
 
 <Router>
@@ -12,7 +13,7 @@
 		<Link to="test" class="header-link align-left">Products</Link>
 		<Link to="login" class="header-link align-right">Login</Link>
 	</nav>
-	
+	<Route path="login" component={Signup}/>
 	<Route path="test" component={Test} />
 	<Route path="/" component={Home} />
 </Router>
