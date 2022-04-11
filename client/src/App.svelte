@@ -3,6 +3,12 @@
 	import Test from "./routes/Test.svelte";
 	import Home from "./routes/Home.svelte";
 	import Signup from "./routes/Signup.svelte";
+	import { loginStore } from "./stores.js";
+
+	let isLoggedIn = false;
+
+	loginStore.subscribe((value) => isLoggedIn = value);
+
 </script>
 
 <Router>
@@ -11,7 +17,12 @@
 		<Link to="test" class="header-link space-between">Products</Link>
 		<Link to="test" class="header-link space-between">Products</Link>
 		<Link to="test" class="header-link align-left">Products</Link>
-		<Link to="login" class="header-link align-right">Login</Link>
+		
+		{#if !isLoggedIn}
+		<Link to="login" class="header-link align-right">Sign in</Link>
+		{:else}
+		<Link to="login" class="header-link align-right">Sign out</Link>
+		{/if}
 	</nav>
 	<Route path="login" component={Signup}/>
 	<Route path="test" component={Test} />
