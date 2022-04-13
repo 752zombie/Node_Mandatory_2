@@ -1,3 +1,3 @@
 import { writable } from "svelte/store";
 
-export const loginStore = writable(false);
+export const loginStore = writable(sessionStorage.getItem("isLoggedIn") === "true");

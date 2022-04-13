@@ -2,9 +2,10 @@
     import { useNavigate } from "svelte-navigator";
     import { loginStore } from "../stores.js";
     const navigate = useNavigate();
+    let firstNameInput = "";
+    let lastNameInput = "";
     let emailInpput = "";
     let passwordInput = "";
-    let loggedIn = false;
     let isSignUpForm = false;
 
     async function signUp() {
@@ -13,15 +14,19 @@
             headers : {
                 "Content-Type": "application/json"
             },
-            body : JSON.stringify({email : emailInpput, password : passwordInput})
+            body : JSON.stringify({email : emailInpput, password : passwordInput, firstName : firstNameInput, lastName : lastNameInput})
         }
         const response = await fetch("http://localhost:8080/signup", request);
-        const { result } = await response.json();
-        loggedIn = result === "success";
-        console.log("result: ", result);
-        if (loggedIn) {
+        const data  = await response.json();
+        
+        if (data.result === "success") {
             loginStore.set(true);
+            sessionStorage.setItem("isLoggedIn", "true");
             navigate("/");
+        }
+
+        else {
+            alert("User with that email already exists");
         }
     }
 
@@ -34,15 +39,44 @@
             body : JSON.stringify({email : emailInpput, password : passwordInput})
         }
         const response = await fetch("http://localhost:8080/signin", request);
-        const { result } = await response.json();
-        loggedIn = result === "success";
-        console.log("result: ", result);
-        if (loggedIn) {
+        const data = await response.json();
+        
+        if (data.result === "success") {
             loginStore.set(true);
+            sessionStorage.setItem("isLoggedIn", "true");
             navigate("/");
         }
+
+        else {
+            alert("Wrong email or password");
+        }
     }
+
+    function handleKeyPress(event) {
+        if (event.key == "Enter") {
+            if (isSignUpForm) {
+                signUp();
+            }
+
+            else {
+                signIn();
+            }
+        }
+    }
+
+
 </script>
+
+{#if isSignUpForm}
+<h1>Sign up</h1>
+<label for="first-name">First name: </label>
+<input type="text" name="first-name" id="first-name" bind:value={firstNameInput}> <br>
+<label for="last-name">Last name: </label>
+<input type="text" name="last-name" id="last-name" bind:value={lastNameInput}> <br>
+{:else}
+<h1>Sign in</h1>
+{/if}
+
 <label for="email">Email: </label>
 <input type="email" name="email" id="email" bind:value={emailInpput}> <br>
 <label for="password">Password: </label>
@@ -55,6 +89,8 @@
 <button on:click={signIn}>Sign in</button><br>
 <span on:click={() => isSignUpForm = true}>Don't have an account yet? Go to sign up</span>
 {/if}
+
+<svelte:window on:keypress={handleKeyPress}/>
 
 <style>
     span {

@@ -3,11 +3,14 @@
 	import Test from "./routes/Test.svelte";
 	import Home from "./routes/Home.svelte";
 	import Signup from "./routes/Signup.svelte";
+	import signOut from "./scripts/signout.js";
 	import { loginStore } from "./stores.js";
+
 
 	let isLoggedIn = false;
 
 	loginStore.subscribe((value) => isLoggedIn = value);
+
 
 </script>
 
@@ -21,12 +24,15 @@
 		{#if !isLoggedIn}
 		<Link to="login" class="header-link align-right">Sign in</Link>
 		{:else}
-		<Link to="login" class="header-link align-right">Sign out</Link>
+		<span class="header-link align-right" on:click={signOut}>Sign out</span>
 		{/if}
 	</nav>
-	<Route path="login" component={Signup}/>
-	<Route path="test" component={Test} />
-	<Route path="/" component={Home} />
+	<main>
+		<Route path="login" component={Signup}/>
+		<Route path="test" component={Test} />
+		<Route path="/" component={Home} />
+	</main>
+
 </Router>
 
 
@@ -67,6 +73,13 @@
 		font-size: x-large;
 	}
 
+	.header-link {
+		text-decoration: none;
+		color: white;
+		font-size: x-large;
+		cursor: pointer;
+	}
+
 	nav :global(.header-link:hover) {
 		text-decoration: underline;
 	}
@@ -75,13 +88,13 @@
 		margin: 0px;
 		padding: 0px;
 	}
-	
 
 	main {
 		text-align: center;
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
+		margin-top: 10%;
 	}
 
 	@media (min-width: 640px) {
