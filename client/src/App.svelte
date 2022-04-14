@@ -2,7 +2,7 @@
 	import { Router, Link, Route } from "svelte-navigator";
 	import Test from "./routes/Test.svelte";
 	import Home from "./routes/Home.svelte";
-	import Signup from "./routes/Signup.svelte";
+	import Login from "./routes/Login.svelte";
 	import signOut from "./scripts/signout.js";
 	import { loginStore } from "./stores.js";
 
@@ -28,7 +28,7 @@
 		{/if}
 	</nav>
 	<main>
-		<Route path="login" component={Signup}/>
+		<Route path="login" component={Login}/>
 		<Route path="test" component={Test} />
 		<Route path="/" component={Home} />
 	</main>
