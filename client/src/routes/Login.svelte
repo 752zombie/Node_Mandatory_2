@@ -7,6 +7,7 @@
     let emailInpput = "";
     let passwordInput = "";
     let isSignUpForm = false;
+    let currentError = "";
 
     async function signUp() {
         const request = {
@@ -26,7 +27,7 @@
         }
 
         else {
-            alert("Error: " + data.result);
+            currentError = data.result;
         }
     }
 
@@ -48,7 +49,7 @@
         }
 
         else {
-            alert("Error: " + data.result);
+            currentError = data.result;
         }
     }
 
@@ -84,10 +85,13 @@
 
 {#if isSignUpForm}
 <button on:click={signUp}>Sign up</button><br>
-<span on:click={() => isSignUpForm = false}>Already have an account? Go to sign in</span>
+<span on:click={() => isSignUpForm = false}>Already have an account? Go to sign in</span> <br>
 {:else}
 <button on:click={signIn}>Sign in</button><br>
-<span on:click={() => isSignUpForm = true}>Don't have an account yet? Go to sign up</span>
+<span on:click={() => isSignUpForm = true}>Don't have an account yet? Go to sign up</span> <br>
+{/if}
+{#if currentError}
+<p id="error">Error: {currentError}</p>
 {/if}
 
 <svelte:window on:keypress={handleKeyPress}/>
@@ -97,6 +101,10 @@
      cursor:pointer;
      color:blue;
      text-decoration:underline;
+    }
+
+    #error {
+        color: red;
     }
 </style>
 
