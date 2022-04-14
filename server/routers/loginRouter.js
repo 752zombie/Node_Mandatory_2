@@ -1,52 +1,77 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import session from "express-session";
+import { db } from "../database/createConnection.js";
 
 const router = Router();
 
-const users = [];
 
-router.post("/signup", async (req, res) => {
+router.post("/sign-up", async (req, res) => {
     const formData = req.body;
     // check for valid fields
+    if (!formData.email || !formData.password || !formData.firstName || !formData.lastName) {
+        res.send({result : "invalid fields"});
+        return;
+    }
 
-    // check if user with email already exists
 
     // encrypt password and add user to DB
     const saltrounds = 10;
     const hash = await bcrypt.hash(formData.password, saltrounds);
-    users.push({
-        email : formData.email,
-        password : hash
-    });
 
-    // add new user to session as currently logged in user
-    req.session.isLoggedIn = true;
-    res.send({result : "success"});
+    try {
+        const preparedStatement = await db.prepare("INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)");
+        await preparedStatement.bind({1 : formData.email, 2 : hash, 3 : formData.firstName, 4 : formData.lastName});
+        await preparedStatement.run();
+        // add new user to session as currently logged in user
+        req.session.isLoggedIn = true;
+        res.send({result : "success", user : {email : formData.email, firstName : formData.firstName, lastName : formData.lastName}});
+    }
+
+    catch(err) {
+        res.send({ result : "User with email already exists"});
+    }
+
+
+
 })
 
-router.post("/signin", (req, res) => {
+router.post("/sign-in", async (req, res) => {
     const formData = req.body;
-    const user = users.find((user) => user.email === formData.email);
-    if (user === undefined) {
-        res.send({result : "error"});
+    if (!formData.email || !formData.password) {
+        res.send({result : "invalid fields"});
         return;
     }
 
-    bcrypt.compare(formData.password, user.password, (err, same) => {
-        if (err) {
-            res.send({result : "error"});
-        }
+    const preparedStatement = await db.prepare("SELECT * FROM users WHERE email = ?");
+    await preparedStatement.bind({1 : formData.email});
+    
+    try {
+        const user = await preparedStatement.get();
+        await preparedStatement.finalize();
+    
+    
+        bcrypt.compare(formData.password, user.password, (err, same) => {
+            if (err) {
+                res.send({result : "server error"});
+            }
+    
+            else if (same) {
+                req.session.isLoggedIn = true;
+                res.send({result : "success", user : {firstName : user.first_name, lastName : user.last_name, email : user.email}});
+            }
+    
+            else {
+                res.send({result : "wrong email or password"});
+            }
+        })
+    }
 
-        else if (same) {
-            req.session.isLoggedIn = true;
-            res.send({result : "success"});
-        }
+    catch(err) {
+        res.send({result : "wrong email or password"});
+    }
 
-        else {
-            res.send({result : "wrong username or password"});
-        }
-    })
+
 })
 
 router.post("/sign-out", (req, res) => {

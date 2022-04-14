@@ -16,7 +16,7 @@
             },
             body : JSON.stringify({email : emailInpput, password : passwordInput, firstName : firstNameInput, lastName : lastNameInput})
         }
-        const response = await fetch("http://localhost:8080/signup", request);
+        const response = await fetch("http://localhost:8080/sign-up", request);
         const data  = await response.json();
         
         if (data.result === "success") {
@@ -26,7 +26,7 @@
         }
 
         else {
-            alert("User with that email already exists");
+            alert("Error: " + data.result);
         }
     }
 
@@ -38,7 +38,7 @@
             },
             body : JSON.stringify({email : emailInpput, password : passwordInput})
         }
-        const response = await fetch("http://localhost:8080/signin", request);
+        const response = await fetch("http://localhost:8080/sign-in", request);
         const data = await response.json();
         
         if (data.result === "success") {
@@ -48,7 +48,7 @@
         }
 
         else {
-            alert("Wrong email or password");
+            alert("Error: " + data.result);
         }
     }
 
