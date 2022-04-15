@@ -4,6 +4,7 @@
 	import Home from "./routes/Home.svelte";
 	import Login from "./routes/Login.svelte";
 	import signOut from "./scripts/signout.js";
+	import Courses from "./routes/Courses.svelte";
 	import { loginStore } from "./stores.js";
 
 
@@ -29,7 +30,7 @@
 	</nav>
 	<main>
 		<Route path="login" component={Login}/>
-		<Route path="test" component={Test} />
+		<Route path="test" component={Courses} />
 		<Route path="/" component={Home} />
 	</main>
 
@@ -60,7 +61,7 @@
 	}
 	
 	nav {
-		background-color: green;
+		background-color: rgb(72, 72, 199);
 		padding-top: 25px;
 		padding-bottom: 25px;
 	}

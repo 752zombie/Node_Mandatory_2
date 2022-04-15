@@ -1,6 +1,7 @@
 import express from "express";
 import testRouter from "./routers/testRouter.js";
 import loginRouter from "./routers/loginRouter.js";
+import coursesRouter from "./routers/coursesRouter.js";
 import session from "express-session";
 const app = express();
 
@@ -16,6 +17,10 @@ app.use(session({
 app.use(testRouter);
 
 app.use(loginRouter);
+
+app.use(coursesRouter);
+
+
 
 import path from "path";
 app.use(express.static(path.resolve('../client/public')));

@@ -1,11 +1,11 @@
 import { db } from "./createConnection.js";
 
-await db.exec(`CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password NOT NULL, 
-    first_name NOT NULL, 
-    last_name NOT NULL
-    );`);
+await db.run("INSERT INTO courses (title, description, price) VALUES ('Javascript', 'In this course you will learn Javascript', 50)");
+await db.run("INSERT INTO courses (title, description, price) VALUES ('Python', 'In this course you will learn Python', 50)");
+await db.run("INSERT INTO courses (title, description, price) VALUES ('Web development', 'In this course you will learn about web development', 50)");
+await db.run("INSERT INTO courses (title, description, price) VALUES ('Cooking', 'In this course you will how to cook great meals', 50)");
+await db.run("INSERT INTO courses (title, description, price) VALUES ('Video editing', 'In this course you will how make cool videos', 50)");
+await db.run("INSERT INTO courses (title, description, price) VALUES ('Linear algebra', 'In this course you will linear algebra', 50)");
+await db.run("INSERT INTO courses (title, description, price) VALUES ('3D rendering', 'In this course you will how modern 3D rendering works', 50)");
 
 await db.close();
