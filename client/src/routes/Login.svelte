@@ -67,32 +67,34 @@
 
 
 </script>
+<div id="login-container">
+    {#if isSignUpForm}
+    <h1>Sign up</h1>
+    <label for="first-name">First name: </label>
+    <input type="text" name="first-name" id="first-name" bind:value={firstNameInput}> <br>
+    <label for="last-name">Last name: </label>
+    <input type="text" name="last-name" id="last-name" bind:value={lastNameInput}> <br>
+    {:else}
+    <h1>Sign in</h1>
+    {/if}
+    
+    <label for="email">Email: </label>
+    <input type="email" name="email" id="email" bind:value={emailInpput}> <br>
+    <label for="password">Password: </label>
+    <input type="password" name="password" id="password" bind:value={passwordInput}> <br>
+    
+    {#if isSignUpForm}
+    <button on:click={signUp}>Sign up</button><br>
+    <span on:click={() => isSignUpForm = false}>Already have an account? Go to sign in</span> <br>
+    {:else}
+    <button on:click={signIn}>Sign in</button><br>
+    <span on:click={() => isSignUpForm = true}>Don't have an account yet? Go to sign up</span> <br>
+    {/if}
+    {#if currentError}
+    <p id="error">Error: {currentError}</p>
+    {/if}
+</div>
 
-{#if isSignUpForm}
-<h1>Sign up</h1>
-<label for="first-name">First name: </label>
-<input type="text" name="first-name" id="first-name" bind:value={firstNameInput}> <br>
-<label for="last-name">Last name: </label>
-<input type="text" name="last-name" id="last-name" bind:value={lastNameInput}> <br>
-{:else}
-<h1>Sign in</h1>
-{/if}
-
-<label for="email">Email: </label>
-<input type="email" name="email" id="email" bind:value={emailInpput}> <br>
-<label for="password">Password: </label>
-<input type="password" name="password" id="password" bind:value={passwordInput}> <br>
-
-{#if isSignUpForm}
-<button on:click={signUp}>Sign up</button><br>
-<span on:click={() => isSignUpForm = false}>Already have an account? Go to sign in</span> <br>
-{:else}
-<button on:click={signIn}>Sign in</button><br>
-<span on:click={() => isSignUpForm = true}>Don't have an account yet? Go to sign up</span> <br>
-{/if}
-{#if currentError}
-<p id="error">Error: {currentError}</p>
-{/if}
 
 <svelte:window on:keypress={handleKeyPress}/>
 
@@ -105,6 +107,10 @@
 
     #error {
         color: red;
+    }
+
+    #login-container {
+        margin-top: 10%;
     }
 </style>
 

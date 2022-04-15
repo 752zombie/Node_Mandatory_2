@@ -1,6 +1,5 @@
 <script>
 	import { Router, Link, Route } from "svelte-navigator";
-	import Test from "./routes/Test.svelte";
 	import Home from "./routes/Home.svelte";
 	import Login from "./routes/Login.svelte";
 	import signOut from "./scripts/signout.js";
@@ -18,9 +17,7 @@
 <Router>
 	<nav class="link-wrapper">
 		<Link to="/" class="header-link space-between first-link">Home</Link>
-		<Link to="test" class="header-link space-between">Products</Link>
-		<Link to="test" class="header-link space-between">Products</Link>
-		<Link to="test" class="header-link align-left">Products</Link>
+		<Link to="courses" class="header-link align-left">Courses</Link>
 		
 		{#if !isLoggedIn}
 		<Link to="login" class="header-link align-right">Sign in</Link>
@@ -30,7 +27,7 @@
 	</nav>
 	<main>
 		<Route path="login" component={Login}/>
-		<Route path="test" component={Courses} />
+		<Route path="courses" component={Courses} />
 		<Route path="/" component={Home} />
 	</main>
 
@@ -52,12 +49,9 @@
 		margin-right: auto;
 	}
 
-	nav :global(.space-between) {
-		margin-right: 20px;
-	}
-
 	nav :global(.first-link) {
 		margin-left: 10px;
+		margin-right: 20px;
 	}
 	
 	nav {
@@ -95,7 +89,6 @@
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
-		margin-top: 10%;
 	}
 
 	@media (min-width: 640px) {
