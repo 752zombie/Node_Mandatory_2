@@ -21,7 +21,6 @@ app.use(loginRouter);
 app.use(coursesRouter);
 
 
-
 import path from "path";
 app.use(express.static(path.resolve('../client/public')));
 

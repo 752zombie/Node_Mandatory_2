@@ -4,12 +4,20 @@
 	import Login from "./routes/Login.svelte";
 	import signOut from "./scripts/signout.js";
 	import Courses from "./routes/Courses.svelte";
-	import { loginStore } from "./stores.js";
+	import Checkout from "./routes/Checkout.svelte";
+	import { loginStore, basketStore } from "./stores.js";
+	import PrivateRoute from "./PrivateRoute.svelte";
 
 
 	let isLoggedIn = false;
+	let basket = [];
+
+	let basketAmount;
+
+	$: basketAmount = basket.reduce((prev, next) => prev + next.amount, 0);
 
 	loginStore.subscribe((value) => isLoggedIn = value);
+	basketStore.subscribe((value) => {basket = value; console.log(basket)});
 
 
 </script>
@@ -18,6 +26,8 @@
 	<nav class="link-wrapper">
 		<Link to="/" class="header-link space-between first-link">Home</Link>
 		<Link to="courses" class="header-link align-left">Courses</Link>
+
+		<Link to="checkout" class="header-link align-right" id="cart">Cart ({basketAmount})</Link>
 		
 		{#if !isLoggedIn}
 		<Link to="login" class="header-link align-right">Sign in</Link>
@@ -29,6 +39,9 @@
 		<Route path="login" component={Login}/>
 		<Route path="courses" component={Courses} />
 		<Route path="/" component={Home} />
+		<PrivateRoute path="checkout" let:location>
+			<Checkout/>
+		</PrivateRoute>
 	</main>
 
 </Router>
@@ -41,7 +54,6 @@
 	}
 
 	nav :global(.align-right) {
-		margin-left: auto;
 		margin-right: 20px;
 	}
 
@@ -82,6 +94,11 @@
 	:global(body) {
 		margin: 0px;
 		padding: 0px;
+	}
+
+	nav :global(#cart) {
+		background-color: green;
+		margin-left: auto;
 	}
 
 	main {

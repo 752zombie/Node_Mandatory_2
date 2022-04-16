@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { basketStore } from "../stores";
 
     let courses = [];
     let pageToFetch = 1;
@@ -29,6 +30,21 @@
             // display message that there is no more pages;
         }
     }
+
+    function addToBasket(courseToAdd) {
+        basketStore.update(basket => {
+            const courseToIncrement = basket.find((course) => course.id === courseToAdd.id);
+            if (courseToIncrement) {
+                courseToIncrement.amount++;
+                return [...basket];
+            }
+
+            else {
+                courseToAdd.amount = 1;
+                return [...basket, courseToAdd];
+            }
+        });
+    }
 </script>
 
 
@@ -39,13 +55,17 @@
         <p class="description">{course.description}</p>
         <div class="price">
             <span>Price: {course.price}$</span>
-            <button class="add-to-basket">Add to basket</button> 
+            <button class="add-to-basket" on:click={() => addToBasket({...course})}>Add to cart</button> 
         </div>
     </div> <br>
 {/each}
 
-<button class="previous" on:click={previousPage}>Previous page</button>
-<button on:click={nextPage}>Next page</button>
+
+
+<button on:click={previousPage}>Previous page</button>
+<button on:click={nextPage}>Next page</button>        
+
+
 
 <style>
     .add-to-basket {
@@ -66,7 +86,7 @@
     .price {
         text-align: right;
     }
-
+    
 </style>
 
 
