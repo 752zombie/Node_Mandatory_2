@@ -6,48 +6,87 @@ import { db } from "../database/createConnection.js";
 
 const router = Router();
 
-async function sendMail() {
+async function sendMail(receiver, data) {
       // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
+    service : "Gmail",
     auth: {
-      user: testAccount.user, // generated ethereal user
-      pass: testAccount.pass, // generated ethereal password
+      user: process.env.SENDER_EMAIL, // generated ethereal user
+      pass: process.env.SENDER_PASSWORD, // generated ethereal password
     },
   });
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Fred Foo 👻" <foo@example.com>', // sender address
-    to: "bar@example.com, baz@example.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
+    from: process.env.SENDER_EMAIL, // sender address
+    to: receiver,
+    subject: data.subject ? data.subject : "No subject", // Subject line
+    text: data.text ? data.text : "No text", // plain text body
+    html: data.html ? data.html : "No html", // html body
   });
 
   console.log("Message sent: %s", info.messageId);
 }
 
+
+function buildReceipt(courses) {
+    let text = "";
+    for (let course of courses) {
+        let amount = course.amount;
+        let price = course.price;
+        let subtotal = amount * price;
+        text += `${course.id} ${course.title} x ${amount} x ${price} = ${subtotal}\n`
+    }
+
+    const total = courses.reduce((prev, next) => prev + next.amount * next.price, 0);
+    text += "Total price: " + total;
+    return text;
+}
+
+function buildHtmlReceipt(courses) {
+    let html = "<p>Thank you for your purchase</p>";
+    html += "<p>Order summary:</p>"
+    html += "<table style='text-align:left;border-spacing:10px'>"
+    // table headers
+    html += "<tr><th>Course id</th><th>Course name</th><th>Price (USD)</th><th>Amount</th><th>Subtotal</th></tr>";
+
+    for (let course of courses) {
+        html += `<tr>
+        <td style='padding-top: 15px;padding-right: 15px;border-bottom: 2px solid black;'>${course.id}</td>
+        <td style='padding-top: 15px;padding-right: 15px;border-bottom: 2px solid black;'>${course.title}</td>
+        <td style='padding-top: 15px;padding-right: 15px;border-bottom: 2px solid black;'>${course.price}</td>
+        <td style='padding-top: 15px;padding-right: 15px;border-bottom: 2px solid black;'>${course.amount}</td>
+        <td style='padding-top: 15px;padding-right: 15px;border-bottom: 2px solid black;'>${course.price * course.amount}</td>
+        </tr>`;
+    }
+
+    html += "</table>"
+
+    html += `<p>Total price: ${courses.reduce((prev, next) => prev + next.amount * next.price, 0)}</p>`
+
+    return html;
+
+}
+
 router.post("/checkout" , async (req, res) => {
-    //sendMail();
-    console.log(process.env.test);
     const coursesFromClient = req.body.courses;
     const courses = [];
+    console.log(coursesFromClient);
+    console.log(req.session.user.email);
 
-    if (!coursesFromClient) {
-        res.send({result : "error"});
+    if (!coursesFromClient || !req.session.isLoggedIn) {
+        res.send({result : "error input"});
         return;
     }
 
     for (let course of coursesFromClient) {
         try {
+            console.log(course);
             let preparedStatement = await db.prepare("SELECT price, title, id FROM courses WHERE id = ?");
             await preparedStatement.bind({1 : course.id});
             let courseFromDB = await preparedStatement.get();
             if (courseFromDB === undefined) {
-                res.send({result : "error"});
+                res.send({result : "error id"});
                 return;
             }
             
@@ -57,11 +96,17 @@ router.post("/checkout" , async (req, res) => {
         }
 
         catch(err) {
-            res.send({result : "error"});
+            res.send({result : "error db"});
         }
     }
 
-    const totalPrice = courses.reduce((prev, next) => prev + next.amount * next.price, 0);
+    const data = {
+        subject : "Order summary",
+        text : buildReceipt(courses),
+        html : buildHtmlReceipt(courses)
+    }
+
+    sendMail(req.session.user.email, data);
 
     res.send({result : "success"});
 })
