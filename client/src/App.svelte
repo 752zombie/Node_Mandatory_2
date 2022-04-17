@@ -8,12 +8,7 @@
 	import Confirmation from "./routes/Confirmation.svelte";
 	import { loginStore, basketStore } from "./stores.js";
 	import PrivateRoute from "./PrivateRoute.svelte";
-	import {onMount} from "svelte";
-	import {useNavigate} from "svelte-navigator";
-
-
-	let navigate;
-	onMount(() => navigate = useNavigate());
+	import {navigate} from "svelte-navigator";
 
 
 	let isLoggedIn = false;

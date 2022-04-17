@@ -25,7 +25,6 @@ async function sendMail(receiver, data) {
     html: data.html ? data.html : "No html", // html body
   });
 
-  console.log("Message sent: %s", info.messageId);
 }
 
 
@@ -71,17 +70,15 @@ function buildHtmlReceipt(courses) {
 router.post("/checkout" , async (req, res) => {
     const coursesFromClient = req.body.courses;
     const courses = [];
-    console.log(coursesFromClient);
-    console.log(req.session.user.email);
+
 
     if (!coursesFromClient || !req.session.isLoggedIn) {
-        res.send({result : "error input"});
+        res.send({result : !coursesFromClient ? "no courses sent" : "you need to be signed in"});
         return;
     }
 
     for (let course of coursesFromClient) {
         try {
-            console.log(course);
             let preparedStatement = await db.prepare("SELECT price, title, id FROM courses WHERE id = ?");
             await preparedStatement.bind({1 : course.id});
             let courseFromDB = await preparedStatement.get();
@@ -106,9 +103,15 @@ router.post("/checkout" , async (req, res) => {
         html : buildHtmlReceipt(courses)
     }
 
-    sendMail(req.session.user.email, data);
+    try {
+        await sendMail(req.session.user.email, data);
+        res.send({result : "success"});
+    }
 
-    res.send({result : "success"});
+    catch(err) {
+        res.send({result : "an error occured on the server"})
+    }
+
 })
 
 export default router;

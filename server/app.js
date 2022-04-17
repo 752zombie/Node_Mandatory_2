@@ -1,5 +1,4 @@
 import express from "express";
-import testRouter from "./routers/testRouter.js";
 import loginRouter from "./routers/loginRouter.js";
 import coursesRouter from "./routers/coursesRouter.js";
 import purchaseRouter from "./routers/purchaseRouter.js"
@@ -15,7 +14,6 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-app.use(testRouter);
 
 app.use(loginRouter);
 

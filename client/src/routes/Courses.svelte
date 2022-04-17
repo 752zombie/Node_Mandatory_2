@@ -8,13 +8,17 @@
     onMount(fetchCourses);
 
     function nextPage() {
-        pageToFetch++;
-        fetchCourses();
+        if (courses.length !== 0) {
+            pageToFetch++;
+            fetchCourses();
+        }
     }
 
     function previousPage()  {
-        pageToFetch--;
-        fetchCourses();
+        if (pageToFetch > 1) {
+            pageToFetch--;
+            fetchCourses();
+        }
     }
 
     async function fetchCourses() {
@@ -24,10 +28,6 @@
 
         if (data.result === "success") {
             courses = data.courses;
-        }
-
-        else {
-            // display message that there is no more pages;
         }
     }
 
@@ -61,10 +61,14 @@
     </div> <br>
 {/each}
 
-
-
+{#if pageToFetch > 1}
 <button on:click={previousPage}>Previous page</button>
-<button on:click={nextPage}>Next page</button>        
+{/if}
+{#if courses.length !== 0}
+<button on:click={nextPage}>Next page</button>
+{:else}
+<p>There are no more courses</p>
+{/if}        
 
 
 
