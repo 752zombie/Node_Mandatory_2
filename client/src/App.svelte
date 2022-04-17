@@ -19,7 +19,7 @@
 	$: basketAmount = basket.reduce((prev, next) => prev + next.amount, 0);
 
 	loginStore.subscribe((value) => isLoggedIn = value);
-	basketStore.subscribe((value) => {basket = value; console.log(basket)});
+	basketStore.subscribe((value) => basket = value);
 
 
 </script>

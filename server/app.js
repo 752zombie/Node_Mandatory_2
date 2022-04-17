@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 
 app.use(session({
-    secret: 'keyboard cat you should probably change this',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false }

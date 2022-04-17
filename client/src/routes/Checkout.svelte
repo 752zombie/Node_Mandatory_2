@@ -1,6 +1,7 @@
 <script>
     import { basketStore } from "../stores.js";
     import { useNavigate } from "svelte-navigator";
+	
     const navigate = useNavigate();
 
     let currentError = "";
