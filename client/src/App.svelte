@@ -5,8 +5,15 @@
 	import signOut from "./scripts/signout.js";
 	import Courses from "./routes/Courses.svelte";
 	import Checkout from "./routes/Checkout.svelte";
+	import Confirmation from "./routes/Confirmation.svelte";
 	import { loginStore, basketStore } from "./stores.js";
 	import PrivateRoute from "./PrivateRoute.svelte";
+	import {onMount} from "svelte";
+	import {useNavigate} from "svelte-navigator";
+
+
+	let navigate;
+	onMount(() => navigate = useNavigate());
 
 
 	let isLoggedIn = false;
@@ -32,13 +39,14 @@
 		{#if !isLoggedIn}
 		<Link to="login" class="header-link align-right">Sign in</Link>
 		{:else}
-		<span class="header-link align-right" on:click={signOut}>Sign out</span>
+		<span class="header-link align-right" on:click={() => signOut(navigate)}>Sign out</span>
 		{/if}
 	</nav>
 	<main>
 		<Route path="login" component={Login}/>
 		<Route path="courses" component={Courses} />
 		<Route path="/" component={Home} />
+		<Route path="confirmation" component={Confirmation} />
 		<PrivateRoute path="checkout" let:location>
 			<Checkout/>
 		</PrivateRoute>

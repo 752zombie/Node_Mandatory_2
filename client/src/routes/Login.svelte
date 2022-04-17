@@ -1,7 +1,9 @@
 <script>
-    import { useNavigate } from "svelte-navigator";
+    import { useNavigate, useLocation } from "svelte-navigator";
     import { loginStore } from "../stores.js";
     const navigate = useNavigate();
+    const location = useLocation();
+    
     let firstNameInput = "";
     let lastNameInput = "";
     let emailInpput = "";
@@ -23,7 +25,8 @@
         if (data.result === "success") {
             loginStore.set(true);
             sessionStorage.setItem("isLoggedIn", "true");
-            navigate("/");
+            const from = ($location.state && $location.state.from) || "/";
+            navigate(from, { replace: true });
         }
 
         else {
@@ -45,7 +48,8 @@
         if (data.result === "success") {
             loginStore.set(true);
             sessionStorage.setItem("isLoggedIn", "true");
-            navigate("/");
+            const from = ($location.state && $location.state.from) || "/";
+            navigate(from, { replace: true });
         }
 
         else {

@@ -48,6 +48,7 @@
 </script>
 
 
+<h1>Courses</h1>
 
 {#each courses as course}
     <div class="course-container">

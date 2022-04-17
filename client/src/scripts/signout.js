@@ -1,6 +1,6 @@
 import {loginStore} from "../stores.js";
 
-async function signOut() {
+async function signOut(navigate) {
     const request = {
         method : "POST"
     }
@@ -9,7 +9,8 @@ async function signOut() {
     if (result === "success") {
         loginStore.set(false);
         sessionStorage.removeItem("isLoggedIn");
-        window.location.href = "http://localhost:8080/";
+        //window.location.href = "http://localhost:8080/";
+        navigate("/");
     }
 
     else {

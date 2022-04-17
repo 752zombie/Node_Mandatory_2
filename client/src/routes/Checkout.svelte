@@ -1,5 +1,9 @@
 <script>
     import { basketStore } from "../stores.js";
+    import { useNavigate } from "svelte-navigator";
+    const navigate = useNavigate();
+
+    let currentError = "";
 
     let basket = [];
     basketStore.subscribe(basketFromStore => basket = basketFromStore);
@@ -19,19 +23,21 @@
 
         if (data.result === "success") {
             //remove all items from basket
-            console.log("success");
+            basket = [];
+            basketStore.set([]);
 
             //navigate to thank you for purchase screen
+            navigate("/confirmation");
         }
 
         else {
-            //display error
+            currentError = data.result;
         }
     }
 </script>
+
 <div id="checkout-container">
     <h1>Checkout summary</h1>
-
     <table id="checkout-table">
         <tr>
             <th>Course name</th>
@@ -52,6 +58,9 @@
     <p id="total">Total: {totalPrice}</p>
     <button on:click={checkOut}>Confirm purchase</button>
 </div>
+{#if currentError}
+<p id="error">Error: {currentError}</p>
+{/if}
 
 <style>
     #checkout-container {
@@ -72,5 +81,10 @@
 
     button {
         background-color: green;
+        color: white;
+    }
+
+    #error {
+        color: red;
     }
 </style>

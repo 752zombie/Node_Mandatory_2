@@ -62,7 +62,7 @@ function buildHtmlReceipt(courses) {
 
     html += "</table>"
 
-    html += `<p>Total price: ${courses.reduce((prev, next) => prev + next.amount * next.price, 0)}</p>`
+    html += `<p>Total price: ${courses.reduce((prev, next) => prev + next.amount * next.price, 0)}\$</p>`
 
     return html;
 
