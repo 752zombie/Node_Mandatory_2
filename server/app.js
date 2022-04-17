@@ -2,6 +2,7 @@ import express from "express";
 import testRouter from "./routers/testRouter.js";
 import loginRouter from "./routers/loginRouter.js";
 import coursesRouter from "./routers/coursesRouter.js";
+import purchaseRouter from "./routers/purchaseRouter.js"
 import session from "express-session";
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(testRouter);
 app.use(loginRouter);
 
 app.use(coursesRouter);
+
+app.use(purchaseRouter);
 
 
 import path from "path";
