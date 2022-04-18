@@ -7,12 +7,12 @@ import { db } from "../database/createConnection.js";
 const router = Router();
 
 async function sendMail(receiver, data) {
-      // create reusable transporter object using the default SMTP transport
+    
   let transporter = nodemailer.createTransport({
     service : "Gmail",
     auth: {
-      user: process.env.SENDER_EMAIL, // generated ethereal user
-      pass: process.env.SENDER_PASSWORD, // generated ethereal password
+      user: process.env.SENDER_EMAIL, 
+      pass: process.env.SENDER_PASSWORD, 
     },
   });
 
