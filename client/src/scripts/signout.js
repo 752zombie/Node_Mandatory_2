@@ -9,7 +9,6 @@ async function signOut(navigate) {
     if (result === "success") {
         loginStore.set(false);
         sessionStorage.removeItem("isLoggedIn");
-        //window.location.href = "http://localhost:8080/";
         navigate("/");
     }
 

@@ -23,10 +23,11 @@ router.post("/sign-up", async (req, res) => {
         const preparedStatement = await db.prepare("INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)");
         await preparedStatement.bind({1 : formData.email, 2 : hash, 3 : formData.firstName, 4 : formData.lastName});
         await preparedStatement.run();
-        // add new user to session as currently logged in user
+        
         const user = {
             email : formData.email
         }
+        // add new user to session as currently logged in user
         req.session.isLoggedIn = true;
         req.session.user = user;
         res.send({result : "success", user : {email : formData.email, firstName : formData.firstName, lastName : formData.lastName}});
